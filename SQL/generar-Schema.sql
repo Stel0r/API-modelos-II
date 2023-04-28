@@ -5,14 +5,14 @@ BEGIN;
 
 CREATE TABLE IF NOT EXISTS public."Permiso"
 (
-    "idPermiso" integer NOT NULL DEFAULT nextval('"Permiso_idPermiso_seq"'::regclass),
+    "idPermiso" integer NOT NULL generated always as identity primary key,
     "nombrePermiso" character varying(10) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT "Permiso_pkey" PRIMARY KEY ("idPermiso")
 );
 
 CREATE TABLE IF NOT EXISTS public."Persona"
 (
-    "idPersona" integer NOT NULL DEFAULT nextval('"Persona_idPersona_seq"'::regclass),
+    "idPersona" integer NOT NULL generated always as identity primary key,
     "Nombre" character varying(10) COLLATE pg_catalog."default" NOT NULL,
     "Apellido" character varying(10) COLLATE pg_catalog."default" NOT NULL,
     "Documento" character varying(10) COLLATE pg_catalog."default" NOT NULL,
@@ -22,15 +22,15 @@ CREATE TABLE IF NOT EXISTS public."Persona"
 
 CREATE TABLE IF NOT EXISTS public."Rol"
 (
-    "idRol" integer NOT NULL DEFAULT nextval('"Rol_idRol_seq"'::regclass),
+    "idRol" integer NOT NULL generated always as identity primary key,
     "nombreRol" character varying(10) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT "Rol_pkey" PRIMARY KEY ("idRol")
 );
 
 CREATE TABLE IF NOT EXISTS public."Rol_Permiso"
 (
-    "Rol_idRol" integer NOT NULL DEFAULT nextval('"Rol_Permiso_Rol_idRol_seq"'::regclass),
-    "Permiso_idPermiso" integer NOT NULL DEFAULT nextval('"Rol_Permiso_Permiso_idPermiso_seq"'::regclass)
+    "Rol_idRol" integer NOT NULL,
+    "Permiso_idPermiso" integer NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public."Usuario"
