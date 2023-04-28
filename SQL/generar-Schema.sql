@@ -6,8 +6,7 @@ BEGIN;
 CREATE TABLE IF NOT EXISTS public."Permiso"
 (
     "idPermiso" integer NOT NULL generated always as identity primary key,
-    "nombrePermiso" character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT "Permiso_pkey" PRIMARY KEY ("idPermiso")
+    "nombrePermiso" character varying(10) COLLATE pg_catalog."default" NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public."Persona"
@@ -16,15 +15,13 @@ CREATE TABLE IF NOT EXISTS public."Persona"
     "Nombre" character varying(10) COLLATE pg_catalog."default" NOT NULL,
     "Apellido" character varying(10) COLLATE pg_catalog."default" NOT NULL,
     "Documento" character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    "Direccion" character varying(50) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT "Persona_pkey" PRIMARY KEY ("idPersona")
+    "Direccion" character varying(50) COLLATE pg_catalog."default" NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public."Rol"
 (
     "idRol" integer NOT NULL generated always as identity primary key,
-    "nombreRol" character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT "Rol_pkey" PRIMARY KEY ("idRol")
+    "nombreRol" character varying(10) COLLATE pg_catalog."default" NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public."Rol_Permiso"
