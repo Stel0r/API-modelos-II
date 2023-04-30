@@ -7,6 +7,18 @@ class Solicitud(BaseModel):
     correo:str
     password:str
 
+class RegistroUsuario(BaseModel):
+    correo:str
+    password:str
+    nombre:str
+    apellido:str
+    documento:str
+    direccion:str
+
+
+    
+
+
 
 
 app = FastAPI()
@@ -38,4 +50,16 @@ async def root(solicitud:Solicitud):
             return {"message": "La contraseña es incorrecta, intentelo nuevamente"}
 
 
-
+@app.post("/register/")
+async def root(registro:RegistroUsuario):
+    consulta = "INSERT INTO public.\"Persona\"(\"Nombre\", \"Apellido\", \"Documento\", \"Direccion\") VALUES (%s, %s, %s, %s) RETURNING \"idPersona\";"
+    arg = (registro.nombre,registro.apellido,registro.documento,registro.direccion)
+    resultados = Conexion.insertarPersona(consulta,arg)
+    
+    if(len(resultados) == 0):
+        return{"message": "no se ha encontrado ninguna cuenta vinculada al correo provisto"}
+    else:
+        print(resultados)
+        consulta = "INSERT INTO public.\"Usuario\"(\"Correo\", \"Contraseña\", \"idPersona\", \"idRol\") VALUES (%s, %s, %s, %s) ;"
+        arg = (registro.correo,registro.password,resultados[0][0],2)
+        Conexion.insertarUsuario(consulta,arg)
