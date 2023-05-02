@@ -14,8 +14,6 @@ class RegistroUsuario(BaseModel):
     apellido:str
     documento:str
     direccion:str
-
-
     
 
 
@@ -41,13 +39,17 @@ app.add_middleware(
 async def root(solicitud:Solicitud):
     resultados = Conexion.ejecutarConsulta("SELECT * FROM \"Usuario\" WHERE \"Correo\"='"+solicitud.correo+"'")
     if(len(resultados) == 0):
-        return{"message": "no se ha encontrado ninguna cuenta vinculada al correo provisto"}
+        return{"message": "no se ha encontrado ninguna cuenta vinculada al correo provisto",
+                    "codigo":404}
     else:
         #hay que introducir la verificacion de contraseña
         if resultados[0][1] == solicitud.password:
-            return {"message": "Validacion exitosa, Bienvenido!"}
+            return {"message": "Validacion exitosa, Bienvenido!",
+                    "codigo":200}
+    
         else:
-            return {"message": "La contraseña es incorrecta, intentelo nuevamente"}
+            return {"message": "La contraseña es incorrecta, intentelo nuevamente",
+                    "codigo":404}
 
 
 @app.post("/register/")
