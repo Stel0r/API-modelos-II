@@ -54,14 +54,22 @@ async def root(solicitud:Solicitud):
 
 @app.post("/register/")
 async def root(registro:RegistroUsuario):
-    consulta = "INSERT INTO public.\"Persona\"(\"Nombre\", \"Apellido\", \"Documento\", \"Direccion\") VALUES (%s, %s, %s, %s) RETURNING \"idPersona\";"
-    arg = (registro.nombre,registro.apellido,registro.documento,registro.direccion)
-    resultados = Conexion.insertarPersona(consulta,arg)
-    
-    if(len(resultados) == 0):
-        return{"message": "no se ha encontrado ninguna cuenta vinculada al correo provisto"}
+
+    resultados = Conexion.ejecutarConsulta("SELECT * FROM \"Usuario\" WHERE \"Correo\"='"+registro.correo+"'")
+    if len(resultados) == 0:
+        consulta = "INSERT INTO public.\"Persona\"(\"Nombre\", \"Apellido\", \"Documento\", \"Direccion\") VALUES (%s, %s, %s, %s) RETURNING \"idPersona\";"
+        arg = (registro.nombre,registro.apellido,registro.documento,registro.direccion)
+        resultados = Conexion.insertarPersona(consulta,arg)
+        
+        if(len(resultados) == 0):
+            return{"message": "no se ha podido registrar al usuario",
+                "codigo":404}
+        else:
+            consulta = "INSERT INTO public.\"Usuario\"(\"Correo\", \"Contraseña\", \"idPersona\", \"idRol\") VALUES (%s, %s, %s, %s) ;"
+            arg = (registro.correo,registro.password,resultados[0][0],2)
+            Conexion.insertarUsuario(consulta,arg)
+            return{"message": "El usuario se ha registrado exitosamente",
+                "codigo":200}
     else:
-        print(resultados)
-        consulta = "INSERT INTO public.\"Usuario\"(\"Correo\", \"Contraseña\", \"idPersona\", \"idRol\") VALUES (%s, %s, %s, %s) ;"
-        arg = (registro.correo,registro.password,resultados[0][0],2)
-        Conexion.insertarUsuario(consulta,arg)
+        return{"message": "Este Correo ya esta Registrado",
+                "codigo":404}
